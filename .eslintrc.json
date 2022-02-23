@@ -1,0 +1,23 @@
+{
+    "extends": ["./node_modules/gts"],
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "plugins": ["@typescript-eslint"],
+    "rules": {
+        "@typescript-eslint/naming-convention": "warn",
+        "@typescript-eslint/semi": "warn",
+        "@typescript-eslint/no-namespace": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { "args": "none" }],
+        "curly": "warn",
+        "eqeqeq": "warn",
+        "no-throw-literal": "warn",
+        "node/no-unpublished-require": ["error", { "allowModules": ["mocha"] }],
+        "quotes": ["warn", "double", { "avoidEscape": true }],
+        "semi": "off"
+    },
+    "ignorePatterns": ["*.js", "**/*.d.ts"]
+}
