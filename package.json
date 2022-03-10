@@ -3,7 +3,7 @@
     "publisher": "revng",
     "displayName": "LLVM IR Language Support",
     "description": "LLVM IR language support for Visual Studio Code",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "engines": {
         "vscode": "^1.63.0"
     },
