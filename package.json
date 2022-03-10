@@ -25,7 +25,20 @@
         "onStartupFinished"
     ],
     "browser": "./dist/web/extension.js",
-    "contributes": {},
+    "contributes": {
+        "languages": [
+            {
+                "id": "llvm",
+                "extensions": [
+                    ".ll"
+                ],
+                "aliases": [
+                    "LLVM IR",
+                    "ll"
+                ]
+            }
+        ]
+    },
     "scripts": {
         "integration-test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=dist/web/test/suite/index.js",
         "test": "jest",
