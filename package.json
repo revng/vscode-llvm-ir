@@ -3,7 +3,7 @@
     "publisher": "revng",
     "displayName": "LLVM IR Language Support",
     "description": "LLVM IR language support for Visual Studio Code",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "engines": {
         "vscode": "^1.63.0"
     },
@@ -25,7 +25,20 @@
         "onStartupFinished"
     ],
     "browser": "./dist/web/extension.js",
-    "contributes": {},
+    "contributes": {
+        "languages": [
+            {
+                "id": "llvm",
+                "extensions": [
+                    ".ll"
+                ],
+                "aliases": [
+                    "LLVM IR",
+                    "ll"
+                ]
+            }
+        ]
+    },
     "scripts": {
         "integration-test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=dist/web/test/suite/index.js",
         "test": "jest",

@@ -1,6 +1,7 @@
 **/*
 !icon.png
 !README.md
+!imgs/*
 !LICENSE.md
 !package.json
 !dist/web/extension.js
