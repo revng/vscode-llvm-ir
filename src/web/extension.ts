@@ -17,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
             ["[", "]"],
             ["{", "}"],
         ],
-        wordPattern: Regexp.identifier,
+        wordPattern: Regexp.identifierOrLabel,
     };
     const llvmirDocumentFilter: vscode.DocumentFilter = { pattern: "**/*.ll" };
     const lsp = new LspModelProvider();

@@ -55,6 +55,16 @@ export namespace Regexp {
     export const identifier = new RegExp(`${allIdentifiersFrag}`);
 
     /**
+     * Matches an identifier or a label
+     */
+    export const identifierOrLabel = xre(
+        `(
+            ${allIdentifiersFrag}|      # Normal identifier
+            (${identifierFrag}|\\d+):   # Label identifier
+        )`
+    );
+
+    /**
      * We consider an assignment an identifier followed by a '='
      * Since the named capture 'value' is first it will have precedence
      * otherwise it is a reference it will show up in the named caputure 'user'
