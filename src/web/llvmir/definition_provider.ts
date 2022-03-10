@@ -21,16 +21,22 @@ export class LLVMIRDefinitionProvider implements DefinitionProvider {
     ): DefinitionLink[] | undefined {
         const lspModel = this.lspModelProvider.getModel(document);
         const varRange = document.getWordRangeAtPosition(position, Regexp.identifier);
-        const varName = document.getText(varRange);
+        const labelRange = document.getWordRangeAtPosition(position, Regexp.label);
         const functionInfo = getFunctionFromLine(lspModel, position.line);
-        if (varName !== undefined) {
+        if (varRange !== undefined) {
+            const varName = document.getText(varRange);
             if (functionInfo !== undefined) {
                 return this.transform(document, varName, lspModel.global.values, functionInfo.info.values);
             } else {
                 return this.transform(document, varName, lspModel.global.values);
             }
+        } else if (labelRange !== undefined && functionInfo !== undefined) {
+            const labelName = document.getText(labelRange);
+            const labelVarName = `%${labelName.replace(":", "")}`;
+            return this.transform(document, labelVarName, functionInfo.info.values);
+        } else {
+            return undefined;
         }
-        return undefined;
     }
 
     private transform(
@@ -39,10 +45,7 @@ export class LLVMIRDefinitionProvider implements DefinitionProvider {
         globals: Map<string, Position>,
         locals?: Map<string, Position>
     ): DefinitionLink[] | undefined {
-        let position;
-        if (locals !== undefined) {
-            position = locals.get(varName);
-        }
+        let position = locals?.get(varName);
 
         if (position === undefined) {
             position = globals.get(varName);
