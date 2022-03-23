@@ -16,7 +16,7 @@ export namespace Regexp {
     /**
      * Matches global identifiers
      */
-    const globalVarFrag = `@${identifierFrag}`;
+    const globalVarFrag = `@(${identifierFrag}|\\d+)`;
 
     /**
      * Matches local identifiers

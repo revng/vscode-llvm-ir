@@ -4,6 +4,7 @@ target triple = "x86_64-pc-linux-gnu"
 @.fizz = private unnamed_addr constant [6 x i8] c"Fizz \00", align 1
 @.buzz = private unnamed_addr constant [6 x i8] c"Buzz \00", align 1
 @.nl = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
+@1 = internal constant [13 x i8] "Hello world!\00"
 
 declare noundef i32 @printf(i8* nocapture noundef readonly, ...) local_unnamed_addr
 

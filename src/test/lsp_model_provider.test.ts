@@ -46,7 +46,14 @@ describe("LspModelProvider", () => {
     });
 
     test("Checking globals", () => {
-        expect(Array.from(result.global.values.keys())).toEqual(["@.fmtstr", "@.fizz", "@.buzz", "@.nl", "@printf"]);
+        expect(Array.from(result.global.values.keys())).toEqual([
+            "@.fmtstr",
+            "@.fizz",
+            "@.buzz",
+            "@.nl",
+            "@1",
+            "@printf",
+        ]);
     });
 
     test("Checking locals in @main", () => {
