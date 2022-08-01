@@ -3,6 +3,7 @@
 //
 
 import { CancellationToken, DefinitionLink, DefinitionProvider, Position, Range, TextDocument } from "vscode";
+import { normalizeIdentifier, removeTrailing } from "./common";
 import { getFunctionFromLine } from "./lsp_model";
 import { LspModelProvider } from "./lsp_model_provider";
 import { Regexp } from "./regexp";
@@ -24,7 +25,7 @@ export class LLVMIRDefinitionProvider implements DefinitionProvider {
         const labelRange = document.getWordRangeAtPosition(position, Regexp.label);
         const functionInfo = getFunctionFromLine(lspModel, position.line);
         if (varRange !== undefined) {
-            const varName = document.getText(varRange);
+            const varName = normalizeIdentifier(document.getText(varRange));
             if (functionInfo !== undefined) {
                 return this.transform(document, varName, lspModel.global.values, functionInfo.info.values);
             } else {
@@ -32,7 +33,7 @@ export class LLVMIRDefinitionProvider implements DefinitionProvider {
             }
         } else if (labelRange !== undefined && functionInfo !== undefined) {
             const labelName = document.getText(labelRange);
-            const labelVarName = `%${labelName.replace(":", "")}`;
+            const labelVarName = `%${removeTrailing(labelName, ":")}`;
             return this.transform(document, labelVarName, functionInfo.info.values);
         } else {
             return undefined;

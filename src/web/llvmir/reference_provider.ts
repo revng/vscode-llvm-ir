@@ -13,6 +13,7 @@ import {
     TextDocument,
     Uri,
 } from "vscode";
+import { removeTrailing } from "./common";
 import { getFunctionFromLine } from "./lsp_model";
 import { LspModelProvider } from "./lsp_model_provider";
 import { Regexp } from "./regexp";
@@ -43,7 +44,7 @@ export class LLVMReferenceProvider implements ReferenceProvider {
                 return this.transform(document.uri, globalUsers);
             }
         } else if (labelRange !== undefined && functionInfo !== undefined) {
-            const fixedName = `%${document.getText(labelRange)}`.replace(":", "");
+            const fixedName = removeTrailing(`%${document.getText(labelRange)}`, ":");
             return this.transform(document.uri, functionInfo.info.users.get(fixedName));
         } else {
             return [];

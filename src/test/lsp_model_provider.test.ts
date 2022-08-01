@@ -51,7 +51,8 @@ describe("LspModelProvider", () => {
             "@.fizz",
             "@.buzz",
             "@.nl",
-            "@1",
+            "@0",
+            "@😎",
             "@printf",
         ]);
     });
@@ -61,6 +62,17 @@ describe("LspModelProvider", () => {
         if (mainFunc !== undefined) {
             expect(Array.from(mainFunc.values.keys())).toContain("%didfizzorbuzz");
             expect(Array.from(mainFunc.values.keys())).toContain("%before");
+            expect(Array.from(mainFunc.values.keys())).toContain("%funny:label");
+            expect(Array.from(mainFunc.values.keys())).toContain("%😊");
+        } else {
+            expect(false).toBe(true);
+        }
+    });
+
+    test("Checking labels are normalized", () => {
+        const mainFunc = result.functions.get("@main");
+        if (mainFunc !== undefined) {
+            expect(Array.from(mainFunc.users.keys())).toContain("%hello");
         } else {
             expect(false).toBe(true);
         }

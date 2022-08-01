@@ -3,6 +3,7 @@
 //
 
 import { FoldingRange, FoldingRangeKind, Position, Range, TextDocument, Uri } from "vscode";
+import { normalizeIdentifier } from "./common";
 import { FunctionInfo, LspModel } from "./lsp_model";
 import { Regexp } from "./regexp";
 
@@ -47,7 +48,7 @@ export class LspModelProvider {
                 const funcmeta = defineMatch.groups["funcmeta"];
 
                 lastFunction = new FunctionInfo(i);
-                res.functions.set(funcid, lastFunction);
+                res.functions.set(normalizeIdentifier(funcid), lastFunction);
 
                 // Take the arguments of the function and add them to the values
                 const argsOffset = line.indexOf(args);
@@ -57,7 +58,7 @@ export class LspModelProvider {
                     if (am.index !== undefined && am.groups !== undefined) {
                         const pos = new Position(i, argsOffset + am.index);
                         argsIndexes.push(am.index);
-                        lastFunction.values.set(am.groups["value"], pos);
+                        lastFunction.values.set(normalizeIdentifier(am.groups["value"]), pos);
                     }
                 }
 
@@ -81,7 +82,7 @@ export class LspModelProvider {
                 // If a label is found, we add a '%' to make it coherent w.r.t. jump instructions
                 const pos = new Position(i, labelMatch.index);
                 if (lastFunction !== undefined) {
-                    lastFunction.values.set("%" + labelMatch.groups["label"], pos);
+                    lastFunction.values.set(normalizeIdentifier(`%${labelMatch.groups["label"]}`), pos);
                 }
                 if (lastLabelLine !== undefined) {
                     // When a new label is found, add a folding range for the previous
@@ -107,7 +108,7 @@ export class LspModelProvider {
                 // Treat declarations as global values
                 const funcid = declareMatch.groups["funcid"];
                 const offset = line.indexOf(funcid);
-                res.global.values.set(funcid, new Position(i, offset));
+                res.global.values.set(normalizeIdentifier(funcid), new Position(i, offset));
             } else {
                 // If none of these apply search for values/users
                 const identifierMatches = line.matchAll(Regexp.valueOrUser);
@@ -116,7 +117,7 @@ export class LspModelProvider {
                     if (am.index !== undefined && am.groups !== undefined) {
                         const pos = new Position(i, am.index);
                         if (am.groups["value"] !== undefined) {
-                            const varname = am.groups["value"];
+                            const varname = normalizeIdentifier(am.groups["value"]);
                             if (varname.startsWith("%") && lastFunction !== undefined) {
                                 lastFunction.values.set(varname, pos);
                             } else {
@@ -138,13 +139,14 @@ export class LspModelProvider {
     }
 
     private addUser(users: Map<string, Range[]>, key: string, lineNum: number, index: number) {
-        const value = users.get(key);
+        const normalizedKey = normalizeIdentifier(key);
+        const value = users.get(normalizedKey);
         const newRange = new Range(lineNum, index, lineNum, index + key.length);
         if (value !== undefined) {
             value.push(newRange);
-            users.set(key, value);
+            users.set(normalizedKey, value);
         } else {
-            users.set(key, [newRange]);
+            users.set(normalizedKey, [newRange]);
         }
     }
 }

@@ -4,11 +4,21 @@ target triple = "x86_64-pc-linux-gnu"
 @.fizz = private unnamed_addr constant [6 x i8] c"Fizz \00", align 1
 @.buzz = private unnamed_addr constant [6 x i8] c"Buzz \00", align 1
 @.nl = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
-@1 = internal constant [13 x i8] "Hello world!\00"
+@0 = private unnamed_addr constant [13 x i8] c"Hello world!\00", align 1
+@"😎" = private unnamed_addr constant [15 x i8] c"Goodbye world!\00", align 1
 
 declare noundef i32 @printf(i8* nocapture noundef readonly, ...) local_unnamed_addr
 
 define i32 @main() {
+  br label %"funny:label"
+
+"funny:label":
+  br label %"😊"
+
+"😊":
+  br label %"\68ello"
+
+hello:
   br label %before
 
 before:

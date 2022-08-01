@@ -11,7 +11,10 @@ export namespace Regexp {
     /**
      * Standard identifier from https://llvm.org/docs/LangRef.html#identifiers
      */
-    const identifierFrag = "[-a-zA-Z$._][-a-zA-Z$._0-9]*";
+    const identifierFrag = xstr(`(
+        [-a-zA-Z$._][-a-zA-Z$._0-9]*|   # Standard Identifier Regex
+        ".*?"                           # Quoted identifier
+    )`);
 
     /**
      * Matches global identifiers
