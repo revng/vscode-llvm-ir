@@ -9,11 +9,7 @@ import { LspModelProvider } from "./lsp_model_provider";
 import { Regexp } from "./regexp";
 
 export class LLVMIRDefinitionProvider implements DefinitionProvider {
-    private lspModelProvider: LspModelProvider;
-
-    constructor(tokenModelProvider: LspModelProvider) {
-        this.lspModelProvider = tokenModelProvider;
-    }
+    constructor(private lspModelProvider: LspModelProvider) {}
 
     provideDefinition(
         document: TextDocument,
@@ -32,9 +28,9 @@ export class LLVMIRDefinitionProvider implements DefinitionProvider {
                 return this.transform(document, varName, lspModel.global.values);
             }
         } else if (labelRange !== undefined && functionInfo !== undefined) {
-            const labelName = document.getText(labelRange);
-            const labelVarName = `%${removeTrailing(labelName, ":")}`;
-            return this.transform(document, labelVarName, functionInfo.info.values);
+            const identifier = removeTrailing(document.getText(labelRange), ":");
+            const normalizedIdentifier = normalizeIdentifier(`%${identifier}`);
+            return this.transform(document, normalizedIdentifier, functionInfo.info.values);
         } else {
             return undefined;
         }

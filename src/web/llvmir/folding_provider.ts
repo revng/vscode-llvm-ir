@@ -13,11 +13,7 @@ import {
 import { LspModelProvider } from "./lsp_model_provider";
 
 export class LLVMIRFoldingProvider implements FoldingRangeProvider {
-    private tokenModelProvider: LspModelProvider;
-
-    constructor(tokenModelProvider: LspModelProvider) {
-        this.tokenModelProvider = tokenModelProvider;
-    }
+    constructor(private tokenModelProvider: LspModelProvider) {}
 
     provideFoldingRanges(
         document: TextDocument,
