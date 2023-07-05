@@ -13,17 +13,13 @@ import {
     TextDocument,
     Uri,
 } from "vscode";
-import { removeTrailing } from "./common";
+import { normalizeIdentifier, removeTrailing } from "./common";
 import { getFunctionFromLine } from "./lsp_model";
 import { LspModelProvider } from "./lsp_model_provider";
 import { Regexp } from "./regexp";
 
 export class LLVMReferenceProvider implements ReferenceProvider {
-    private lspModelProvider: LspModelProvider;
-
-    constructor(lspModelProvider: LspModelProvider) {
-        this.lspModelProvider = lspModelProvider;
-    }
+    constructor(private lspModelProvider: LspModelProvider) {}
 
     provideReferences(
         document: TextDocument,
@@ -36,7 +32,7 @@ export class LLVMReferenceProvider implements ReferenceProvider {
         const labelRange = document.getWordRangeAtPosition(position, Regexp.label);
         const functionInfo = getFunctionFromLine(lspModel, position.line);
         if (varRange !== undefined) {
-            const varName = document.getText(varRange);
+            const varName = normalizeIdentifier(document.getText(varRange));
             if (functionInfo?.info.values.get(varName) !== undefined) {
                 return this.transform(document.uri, functionInfo.info.users.get(varName));
             } else {
@@ -44,8 +40,9 @@ export class LLVMReferenceProvider implements ReferenceProvider {
                 return this.transform(document.uri, globalUsers);
             }
         } else if (labelRange !== undefined && functionInfo !== undefined) {
-            const fixedName = removeTrailing(`%${document.getText(labelRange)}`, ":");
-            return this.transform(document.uri, functionInfo.info.users.get(fixedName));
+            const identifier = removeTrailing(document.getText(labelRange), ":");
+            const normalizedIdentifier = normalizeIdentifier(`%${identifier}`);
+            return this.transform(document.uri, functionInfo.info.users.get(normalizedIdentifier));
         } else {
             return [];
         }
